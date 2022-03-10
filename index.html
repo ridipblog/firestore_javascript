@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Firebase</title>
+</head>
+<body>
+	<input type="text" name="" id="name">
+	<br>
+	<input type="text" name="" id="pass">
+	<br>
+	<button onclick="insertfun1()">Insert</button>
+	<button onclick="readfun1()">Select</button>
+	<button onclick="updatefun1()">Update</button>
+	<button onclick="deletefun1()">Delete</button>
+	<script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-auth.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-firestore.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-analytics.js"></script>
+	<script>
+	const firebaseConfig = {
+	  apiKey: "AIzaSyCR4R46NQuVJswy_e2IpDKF_8xWmzci5l8",
+	  authDomain: "cloud-d2ec8.firebaseapp.com",
+	  projectId: "cloud-d2ec8",
+	  storageBucket: "cloud-d2ec8.appspot.com",
+	  messagingSenderId: "925946579292",
+	  appId: "1:925946579292:web:82ccf6d22cc58a3929d999",
+	  measurementId: "G-LM07Q71HCK"
+	};
+	firebase.initializeApp(firebaseConfig);
+	firebase.analytics();
+	var cloudDB=firebase.firestore();
+	function add_doc_id()
+	{
+		var name=document.getElementById("name").value;
+		var pass=document.getElementById("pass").value;
+		cloudDB.collection("Students").add(
+			{
+				name:name,
+				password:pass
+			}
+		).then(function(def)
+		{
+			console.log("Document ID ",def.id);
+		}).catch(function(err)
+		{
+			console.log(err);
+		})
+	}
+	function add_doc()
+	{
+		var name=document.getElementById("name").value;
+		var pass=document.getElementById("pass").value;
+		cloudDB.collection("Students").doc(name).set(
+			{
+				name:name,
+				password:pass
+			}
+		)
+	}
+	function update_doc()
+	{
+		var name=document.getElementById("name").value;
+		var pass=document.getElementById("pass").value;
+		cloudDB.collection("Students").doc(name).update(
+			{
+				name:name,
+				password:pass
+			}
+		)
+	}
+	function delete_doc()
+	{
+		var name=document.getElementById("name").value;
+		cloudDB.collection("Students").doc(name).delete().then(function(){
+			console.log("delete");
+		})
+	}
+	function read_doc()
+	{
+		var name=document.getElementById("name").value;
+		cloudDB.collection("Students").doc(name).get().then(function(docu){
+			if(docu.exists)
+			{
+				console.log(docu.data().password);
+			}
+			else
+			{
+				console.log("No Data");
+			}
+		})
+	}
+	function read_doc_all()
+	{
+		cloudDB.collection("Students").get().then((docu)=>{
+			docu.docs.forEach(each=>{
+				console.log(each.data().name)
+			})
+		})
+	}
+	function insertfun1()
+	{
+		// add_doc_id();
+		add_doc();
+	}
+	function updatefun1()
+	{
+		update_doc();
+	}
+	function deletefun1()
+	{
+		delete_doc();
+	}
+	function readfun1()
+	{
+		read_doc();
+	}
+	read_doc_all();
+	</script>
+
+</body>
+</html>
